@@ -1,5 +1,5 @@
 ---
-title:  "Week 4: Mixed product spaces"
+title:  "Week 5: Joint Probability distributions"
 date:   2018-06-17
 categories: [GSoC]
 tags: [GSoC]
