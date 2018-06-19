@@ -1,0 +1,18 @@
+---
+title:  "Week 4: Mixed product spaces"
+date:   2018-06-17
+categories: [GSoC]
+tags: [GSoC]
+---
+
+[#14777] was merged earlier this week by Francesco, allowing SymPy to handle expressions contained mixed expressions, i.e., expressions containing both continuous and discrete random variables. The expression returned is not simplified as of now, and there were some issues regarding the correctness of the result. However, we were able to verify that the expression returned is indeed the correct answer, by checking it for some trivial cases.
+
+I am still working on Joint probability spaces, and there has been a change in my approach about the functionality, as recommended by my project mentors. I will add some multivariate distributions that the user will be allowed to initialize, similar to single variable cases.
+Eg:
+```
+#input individual symbols, mean vector, and covariance matrix for multivariate
+#normal distribution.
+>>> m = MultivariateNormal('m', ('m1', 'm2'), [1, 2], [[1, 0], [0, 1]])
+>>> density(m)(1, 2)
+1/(2*pi)
+```
