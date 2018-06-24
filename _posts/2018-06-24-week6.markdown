@@ -1,0 +1,19 @@
+---
+title:  "Week 6: Joint Probability distributions (continued)"
+date:   2018-06-24
+categories: [GSoC]
+tags: [GSoC]
+---
+
+This week too, was spent working on joint probability distributions. I should have been working on compound probability distributions by now, but multivariate distributions took more time than I anticipated. I think I'll be able to wrap up joint probability distributions soon, and hopefully catch up with the timeline I suggested in my project proposal.
+As for this week's progress, a class `MarginalPSpace` has been implemented, and along with some multivariate distributions. These include multivariate normal, multivariate laplace, multivariate student, and normal gamma distributions. The user can call the respective functions to return an object of `JointPSpace`, and can calculate the density or the marginal density at any point in the domain, as per the code in [#14764](https://github.com/sympy/sympy/pull/14764). Here's an example:
+```
+>>> from sympy.stats.joint_rv_types import MultivariateNormal
+>>> m = MultivariateNormal((x, y), [1, 2], [[1, 0], [0, 1]])
+>>> density(m)(1, 2)
+1/(2*pi)
+>>> n = MultivariateNormal(('x', 'y', 'z'), [1, 2, 3], [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+>>> marginal_density(n, x, y)(1, 2)
+1/(2*pi)
+```
+Hopefully this PR can get merged without many modifications, and I can move on to implementing compound probability distributions.
