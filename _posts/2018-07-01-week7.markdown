@@ -1,0 +1,28 @@
+---
+title:  "Week 7: Starting with Compound distributions"
+date:   2018-07-01
+categories: [GSoC]
+tags: [GSoC]
+---
+
+I was finally able to get [#14764](https://github.com/sympy/sympy/pull/14764) merged, thus having implemented joint probability distributions on the master branch of SymPy. While I have made contributions to the stats module before, this was my first major implementation, and the first new feature I have added to the module, or SymPy entirely. I opened [#14847](https://github.com/sympy/sympy/pull/14847) also, which contains certain other predefined joint probability distributions.
+
+I also started working with compound probability distributions, and opened [#14855](https://github.com/sympy/sympy/pull/14855). The PR implements a method to calculate the PDF of any random variable which may have one or more of its parameters randomly distributed. However, I believe several changes will have to be made before this can be merged with the master branch. The first decision that needs to be made is regarding the probability spaces of such distributions; whether it should belong to `SinglePSpace` or `JointPSpace`/`ProductPSpace`. As of now, with the code in [#14855](https://github.com/sympy/sympy/pull/14855), the PDF expression of a compounded RV can be obtained as seen in the following example:
+
+```
+>>> from sympy.stats import *
+>>> E1 = Exponential('E1', 1)
+>>> E2 = Exponential('E2', E1)
+>>> pprint(E2.pspace.pdf)
+⎧           1                 π
+⎪       ─────────         for ─ ≥ │arg(E₂)│
+⎪               2             2
+⎪       (E₂ + 1)
+⎪
+⎨∞
+⎪⌠
+⎪⎮     -E₁  -E₁⋅E₂
+⎪⎮ E₁⋅ℯ   ⋅ℯ       d(E₁)      otherwise
+⎪⌡
+⎩0
+```
