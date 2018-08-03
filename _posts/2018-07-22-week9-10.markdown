@@ -1,0 +1,27 @@
+---
+title:  "Week 8: Compound distributions(3)"
+date:   2018-07-22
+categories: [GSoC]
+tags: [GSoC]
+---
+
+I couldn't update the blog last week due to some issues with my laptop(I hope they don't cause more trouble any time soon), so this post is going to contain the updates of the last week as well as the one before it.
+
+I tried another approach of handling compound distributions([#14888](https://github.com/sympy/sympy/pull/14888)), which was basically hardcoding the known results for compound distributions, i.e, writing combinations of `if/else` statements to identify if a combination of a 'outer' distribution and latent distribution is known to give a certain resultant distribution. Here's a piece of code from the PR doing that:
+```
+if cls == NormalDistribution: #cls -> outer distribution of the compound RV
+    if isinstance(args[0], RandomSymbol) and \
+        isinstance(distribution(args[0]), NormalDistribution):
+        mu, sigma = distribution(args[0]).args
+        return NormalDistribution, (mu, sqrt(sigma**2 + args[1]**2)
+```
+
+The issue that remained unaddressed was how to reflect the conditions imposed on latent distributions, which resulted in failing tests. An approach suggested by Francesco to solve this issue was to use Joint distributions.  The current implementation is written to return a RV not with a distribution belonging to `SingleDistribution`, but rather `MarginalDistribution`. The advantage of doing this instead of marginalising at the very beginning was that since the random variable is still a part of the joint distribution, `given`  can modify as per any condition provided by the user. The outcome was that the result was mathematically correct. The PDF  It would, however, require some changes to the current API, because of the following failing tests(or similar ones):
+```
+from sympy.abc import x
+rate = Beta(l, 2, 3)
+X = Poisson(x, rate)
+assert density(X, Eq(rate, rate.symbol)) == PoissonDistribution(l)
+```
+
+As opposed to the test, the output for the test case would be the PDF of `Poisson(x, l)`, `l` being a `Symbol`. 

@@ -1,0 +1,19 @@
+---
+title:  "Week 8: Compound distributions(4)"
+date:   2018-07-29
+categories: [GSoC]
+tags: [GSoC]
+---
+
+My mentors were not very convinced about creating a `JointDistributionHandmade` object out of each compound distributions, and marginalising over the latent distribution.
+Finally, after some discussion the Gitter channel, and on [#14989](https://github.com/sympy/sympy/pull/14989), the final API that was decided gives handles compound distribution to give results as in the follows:
+```
+N1 = Normal('N1', 0, 1)
+N2 = Normal('N2', N1, 2)
+assert density(N2)(0).doit() == sqrt(10)/(10*sqrt(pi))
+assert simplify(density(N2, Eq(N1, 1))(x)) == \
+    sqrt(2)*exp(-(x - 1)**2/8)/(4*sqrt(pi))
+```
+This result doesn't break the previous API, and gives the correct results in terms of density. This is done by creating a `CompoundDistribution` object instead of `SingleDistribution`
+objects, and calculating the PDFs using `MarginalDistribution`. There are checks in place that see to it that the `CompoundDistribution` objects indeed have a RV as an argument, and return single distribution objects otherwise.
+Though compound distributions took a longer time than expected, the PR was merged into the master branch, and compound distributions are implemented in the development version.

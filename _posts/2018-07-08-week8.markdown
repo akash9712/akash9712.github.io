@@ -1,0 +1,25 @@
+---
+title:  "Week 8: Compound distributions(2)"
+date:   2018-07-08
+categories: [GSoC]
+tags: [GSoC]
+---
+
+After some changes, [#14847](https://github.com/sympy/sympy/pull/14847) was merged. This means that now SymPy supports 4 different kinds of pre-defined joint distributions, as listed in the PR description. A 'TODO' that's best left for later right now is adding the support the method that single probability distributions support, `variance( )`, `expectation( )` and `probability( )`. While I am not sure about all the challenges that might arise while implementing these, implementing `probability` might be a bit trickier than others due to the fact that it will require SymPy to solve inequalities in multiple variables, which is not yet supported.
+
+Regarding compound distributions, it's turning out to be more complicated than I expected. To start with, I am not very sure about how the result should look like. Simply leaving a compound distribution random variable in the state given by the user could be one way, but it might not be mathematically correct. For example, if a user types in the following on a python console:
+```
+#<import statements>
+
+Y1 = Poisson('Y1', 2)
+Y2 = Poisson('Y2', Y1)
+```
+Since Y2 is not a poisson random variable with a constant mean, it would be incorrect if `Y2.pspace.distribution` returns a `PoissonDistribution` object. Changing it to `JointDistribution` at the time of its creation, however, is an issue because I cannot yet figure out how to reflect a given condition imposed on the latent distribution(`Y1` in the given example).
+Here's an example of what is returned with the current changes in PR #[14855](https://github.com/sympy/sympy/pull/14855)
+
+```
+N1 = Normal('N1', 0, 1)
+N2 = Normal('N2', N1, 2)
+N = Symbol('N2')
+assert simplify(N2.pspace.pdf) == sqrt(10)*exp(-N**2/10)/(10*sqrt(pi))
+```
