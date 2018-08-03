@@ -1,5 +1,5 @@
 ---
-title:  "Week 8: Compound distributions(4)"
+title:  "Week 11: Compound distributions(4)"
 date:   2018-07-29
 categories: [GSoC]
 tags: [GSoC]
