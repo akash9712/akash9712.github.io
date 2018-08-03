@@ -1,0 +1,15 @@
+---
+title:  "Week 4: Mixed product spaces"
+date:   2018-06-10
+categories: [GSoC]
+tags: [GSoC]
+---
+
+The SymPy stats module implements the class `ProductPSpace`, which can be used for calculations where multiple random variables are involved. Here's an example.
+```
+>>> from sympy.stats import *
+>>> N1, N2 = Normal('N1', 0, 1), Normal('N2', 1, 1)
+>>> P(N1 + N2 > 1)
+1/2
+```
+However, the implementation does not allow the user to do calculations on expressions that are a mixture of discrete and continuous random variables. With the PR [#14777](https://github.com/sympy/sympy/pull/14777), the user can calculate probabilities of conditions consisting of both discrete and continuous random vairiables. This was done by removing the subclasses `ProductDiscretePSpace` and `ProductContinuousPSpace`, and giving `ProductPSpace` its own `Probability` and `compute_density` functions. Apart from adding the functionality, one added benifit of doing this was reducing the complexity of the code because of too many classes and subclasses in the stats module, an issue earlier raised by Francesco and Kalevi.
