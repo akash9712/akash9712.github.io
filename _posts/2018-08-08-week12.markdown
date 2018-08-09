@@ -1,0 +1,18 @@
+---
+title:  "Week 12: Stochastic Processes"
+date:   2018-08-08
+categories: [GSoC]
+tags: [GSoC]
+---
+
+This last week turned out to be particularly tedious for me. GSoC period is about to come to an end, the final evals are here, and yet again, my laptop malfunctioned. But that's a whole another story.
+This week's task was to complete the implementation of Stochastic Processes, and hopefully get it merged into the SymPy master before the coding period ends. This was one of the first things my mentors discussed with me, and something I almost completely got wrong in my project proposal. However, with the joint distributions already being a part of the master branch, the task seems quite feasable.
+Right now, I have made [a PR](https://github.com/sympy/sympy/pull/15058) that implements Bernoulli process. This process is implemented in a way that indexing the process returns a random variable with the bernoulli distribution, and contains a method which returns a joint distribution given a set of keys. For example:
+```
+>>> B = BernoulliProcess('x', S(1)/3)
+>>> x, y = symbols('x y', integer=True)
+>>> assert E(B[1]) == S(1)/3
+>>> assert E(B[x + y], B[x]) == S(1)/3
+```
+
+One other change that was made this week was in PR [#15045](https://github.com/sympy/sympy/pull/15045). As per the changes in this PR, random variables are not needed any more to create a marginal distribution, and it can be created only out a joint distribution and the indices which should be a part of the marginal distribution. This means that Compound distributions, whose PDF was previously implemented by creating a marginal distribution and later marginalising out all the latent distributions, now calculate their PDFs independently. This makes the code look a little more ugly in the `MarginalDistribution.pdf`, but is more in accordance with how the other random distributions in SymPy are created, i.e, without the use of random variables.
