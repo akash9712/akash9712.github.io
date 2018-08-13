@@ -1,0 +1,19 @@
+---
+title:  "Week 13: Wrapping up (not really)"
+date:   2018-08-12
+categories: [GSoC]
+tags: [GSoC]
+---
+
+I am still working on implementing Stochastic Processes as per an API that is similar to the current API, but unfortunately, haven't made much progress this week. On the other hand, expectations of expressions in the various 'components' of a joint random variable can now be calculated (Implemented in [#15079](https://github.com/sympy/sympy/pull/15079)). One issue that came up while implementing this was how to approach arithmatic expressions of a joint random variable itself. Consider the following:
+```
+>>> N = Normal('N', [0, 1], [[1, 0], [0, 1]])
+>>> E(N)
+```
+Now, `N[1]` and `N[0]` take values belonging to the set of reals numbers, but `N` itself takes values in `R*R`, where `R` is the set of real numbers. Francesco suggested that we might consider a joint random variable to be a vector, but this issue has been left for a later time. As of now, running a piece of code as given in the example will simply raise a `NotImplementedError`.
+
+------------------------------------------------------------------------------
+
+GSoC 2018 coding period officially ends on August 14th, which means this is the last in the series of GSoC blog. I plan to keep contributing to the SymPy statistics module in the future, and implement the work which could not be completed over the summers in the near future. Hopefully, the features added over the summer will be useful to anyone using SymPy/stats.
+
+A summary of the work I did as a part of GSoC 2018 can be found [here](https://github.com/akash9712/GSoC-Report/wiki/GSoC-2018:-Improving-Probability-and-Random-processes:-Report).
